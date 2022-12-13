@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-project-depl
+spec:
+  selector:
+    matchLabels:
+      app: fwk-project
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: fwk-project
+    spec:
+      containers:
+        - name: project-fwk:1.0
+          image: project-fwk:1.0
+          ports:
+            - containerPort: 8088
+          env:
+            - name: DB_HOST
+              value: mysql
+            - name: DB_NAME
+              value: model
+            - name: DB_USERNAME
+              value: mysql
+            - name: DB_PASSWORD
+              value: root
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-project-svc
+spec:
+  selector:
+    app: fwk-project
+  ports:
+    - protocol: "TCP"
+      port: 8088
+      targetPort: 8088
+  type: NodePort
+
